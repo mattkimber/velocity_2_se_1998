@@ -1,0 +1,7 @@
+Directory of C:\PROGS\V2SE\.
+TRACK1   MAP             13,122 25-06-1998 19:11
+TRACK2   MAP             13,122 27-06-1998 13:37
+TRACK3   MAP             13,122 28-06-1998 10:52
+TRACK4   MAP             13,122 28-06-1998 14:28
+    4 File(s)            52,488 Bytes.
+    0 Dir(s)        262,111,744 Bytes free.
