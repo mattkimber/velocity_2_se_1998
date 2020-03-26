@@ -60,3 +60,69 @@ are as follows:
 ## Easter egg
 
 Set your player name to "Whole Bucketloads of Toads". This is original from 1998.
+
+## Commentary on some things I have learnt since
+
+While a cynic may suggest the choice of implementation language is a fundamental
+mistake from which I could never have recovered, there are a large number of
+problems with the code stemming from inexperience and a "bash it until it works"
+mentality. Such were those innocent childhood years before the discovery of beer and
+data structures.
+
+I'll discuss a few of the ones I found interesting.
+
+### Global variable overload
+
+Everything is a global variable! Everything is mutated by everything else!
+I first encountered functional programming somewhere between late 2001 and early
+2002, so at the time this was written I'd never heard of side-effects let alone
+why they were bad. V2SE is fairly typical of my style at the time, where everything
+that will ever be tracked is declared at the start of the file and then mutated by
+subroutines. `GetFamilyName` is an excellent example of a side-effecting subroutine
+where even the name is crying out for a function.
+
+### Code repetition
+
+Lines 1212-1331 handle track surface behaviour. This has a huge amount of repeated
+code between surfaces with largely identical behaviour - especially the building
+collision where there are two completely identical blocks of code with minorly
+different `IF` statements!
+
+### Use of multiple discrete variables where arrays would do
+
+The use of `Angle` to select between `Car0`, `Car45`, ... , `Car315` turns up in a
+whole load of different places - one wonders why there is not a single 
+`GetCarSprite()` function and why these are not an array accessed as 
+`Car(Angle / 45)`
+
+### Subroutines relying on external side effects
+
+`PlaySound` is interesting as a very convoluted way of playing the various bleeps and
+blips of the PC speaker soundtrack - it attempts to emulate some level of polyphony
+and was originally intended to be part of some aborted soundcard support. (You can
+still find evidence of this in the code, I have no idea if it would work even if
+you had a SoundBlaster-compatible card at 220h).
+
+The subroutine relies on data being externally set so it can be read back with a
+series of `READ` commands. Thread-safety was not a significant concern in the
+QBASIC world but it's easy to see how an errant code modification could result in
+all sorts of random junk being sent to the internal speaker.
+
+### Code as data
+
+A sixth of the entire line count is taken up by the subroutine `CarData`, which
+mutates the global car performance variables according to what the user has selected
+in an enormous `CASE` statement. What was wrong with putting these in data files,
+especially given the game includes a car editor together with its own `LoadCEF`
+function for loading a car definition from a file?
+
+(The car editor naturally operates by mutating the same global variables `CarData`
+does...)
+
+### No data structures
+
+Another peculiarity of V2SE is it uses only primitive BASIC data types, with multiple
+variables (often global) used to effect the storage of values related to the same
+object or concept. I suspect I was simply unaware of the `TYPE` statement, as it
+does not appear in any code from the time. Knowledge of one's chosen implementation
+language can be useful...
